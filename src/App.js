@@ -15,7 +15,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getPost());
-  }, [currentId, dispatch]);
+  }, [dispatch]);
 
   
   return (
