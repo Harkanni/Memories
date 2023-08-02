@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   Avatar,
   Button,
   Paper,
   Grid,
   Typography,
-  Container,
+  Container
 } from '@material-ui/core';
 import Icon from './Icon';
-import { GoogleLogin } from 'react-google-login';
+// import { GoogleLogin } from 'react-google-login';
+// import { GoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 
 import useStyles from './styles';
 import LockOutLinedIcon from '@material-ui/icons/LockOutlined';
 import Input from './Input';
+import axios from 'axios';
 
 const Auth = () => {
   const classes = useStyles();
+  const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
 
@@ -31,6 +36,31 @@ const Auth = () => {
     setIsSignUp((prevIsSignUp) => !prevIsSignUp);
     handleShowPassword(false);
   };
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => googleSuccess(codeResponse),
+    onError: (error) => console.log(error),
+    onNonOAuthError: (error) => console.log(error),
+    flow: 'implicit'
+  });
+
+  const googleSuccess = async (codeResponse) => {
+    const token = codeResponse.access_token
+    const response = await getUserInfo(token)
+    
+    try {
+      dispatch({type: "AUTH", data: {response, token}})
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  const getUserInfo = async (access_token) =>{
+    const { data } = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${access_token}`, Headers = {
+      Authorization: `Bearer ${access_token}`
+    })
+    return data
+  }
 
   return (
     <Container component='main' maxWidth='xs'>
@@ -80,19 +110,6 @@ const Auth = () => {
               />
             )}
           </Grid>
-          <GoogleLogin
-            clientId='GOOGLE ID'
-            render={(renderProps) => (
-              <Button
-                className={classes.googleButton}
-                color='primary'
-                onClick={renderProps.onClick}
-                disabled={renderProps.disabled}
-                startIcon={<Icon />}
-                variant='contained'
-              >Google Sign In</Button>
-            )}
-          />
           <Button
             type='submit'
             fullWidth
@@ -102,6 +119,34 @@ const Auth = () => {
           >
             {isSignUp ? 'Sign Up' : 'Sign In'}
           </Button>
+
+          <Button
+            className={classes.googleButton}
+            color='primary'
+            fullWidth
+            onClick={() => login()}
+            startIcon={<Icon />}
+            variant='contained'
+          > Google Sign In </Button>
+
+          {/* <GoogleLogin
+            clientId='454950466383-6ijsqpnd0i0el2fnrptkqfm7hba4dokb.apps.googleusercontent.com'
+            // render={(renderProps) => (
+            //   <Button
+            //     className={classes.googleButton}
+            //     color='primary'
+            //     fullWidth
+            //     onClick={renderProps.onClick}
+            //     disabled={renderProps.disabled}
+            //     startIcon={<Icon />}
+            //     variant='contained'
+            //   >Google Sign In</Button>
+            // )}
+            onSuccess={googleSuccess}
+            onError={googleFailure}
+            cookiePolicy='single_host_origin'
+          /> */}
+
           <Grid container justifyContent='center'>
             <Grid item>
               <Button onClick={switchMode}>
