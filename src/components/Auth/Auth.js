@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom'
 import {
   Avatar,
   Button,
@@ -23,6 +24,7 @@ const Auth = () => {
   const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const navigate = useNavigate()
 
   const handleSubmit = () => {};
 
@@ -46,10 +48,11 @@ const Auth = () => {
 
   const googleSuccess = async (codeResponse) => {
     const token = codeResponse.access_token
-    const response = await getUserInfo(token)
+    const result = await getUserInfo(token)
     
     try {
-      dispatch({type: "AUTH", data: {response, token}})
+      dispatch({type: "AUTH", data: {result, token}})
+      navigate('/')
     } catch (error) {
       console.log(error)
     }
