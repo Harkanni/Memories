@@ -18,17 +18,40 @@ import useStyles from './styles';
 import LockOutLinedIcon from '@material-ui/icons/LockOutlined';
 import Input from './Input';
 import axios from 'axios';
+import { signIn, signUp } from '../../actions/auth'
+
+
 
 const Auth = () => {
   const classes = useStyles();
   const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
-  const navigate = useNavigate()
+  const history = useNavigate()
+  const initialState = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  }
 
-  const handleSubmit = () => {};
+  const [formData, setFormData] = useState(initialState)
+  
 
-  const handleChange = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    if(isSignUp) {
+      dispatch(signUp(formData, history))
+    } else {
+      dispatch(signIn(formData, history))
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({...formData, [e.target.name]: e.target.value})
+  };
 
   const handleShowPassword = () => {
     setShowPassword((prevShowPasword) => !prevShowPasword);
@@ -52,7 +75,7 @@ const Auth = () => {
     
     try {
       dispatch({type: "AUTH", data: {result, token}})
-      navigate('/')
+      history('/')
     } catch (error) {
       console.log(error)
     }
@@ -72,7 +95,7 @@ const Auth = () => {
           <LockOutLinedIcon />
         </Avatar>
         <Typography variant='h5'>{isSignUp ? 'Sign Up' : 'Sign In'}</Typography>
-        <form className={classes.form} onSubmit={() => handleSubmit()}>
+        <form className={classes.form} onSubmit={(e) => handleSubmit(e)}>
           <Grid container spacing={2}>
             {isSignUp && (
               <>

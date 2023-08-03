@@ -11,13 +11,13 @@ const Navbar = () => {
   const classes = useStyles();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('Profile')));
   const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const history = useNavigate()
   const location = useLocation()
   console.log(user);
 
   const logout = () => {
     dispatch({type: "LOGOUT",})
-    navigate('/')
+    history('/')
     setUser(null)
   }
 
