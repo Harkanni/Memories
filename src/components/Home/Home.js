@@ -45,9 +45,9 @@ const Home = () => {
     }
   }
   
-  useEffect(() => {
-    dispatch(getPost());
-  }, [currentId, dispatch]);
+  // useEffect(() => {
+  //   dispatch(getPost());
+  // }, [currentId, dispatch]);
 
   return (
     <Grow in>
@@ -90,7 +90,7 @@ const Home = () => {
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
             <Paper elevation={6}>
-              <Pagination />
+              <Pagination page={page}/>
             </Paper>
           </Grid>
         </Grid>
