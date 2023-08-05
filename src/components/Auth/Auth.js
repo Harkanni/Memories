@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
   Button,
@@ -18,39 +18,36 @@ import useStyles from './styles';
 import LockOutLinedIcon from '@material-ui/icons/LockOutlined';
 import Input from './Input';
 import axios from 'axios';
-import { signIn, signUp } from '../../actions/auth'
-
-
+import { signIn, signUp } from '../../actions/auth';
 
 const Auth = () => {
   const classes = useStyles();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
-  const history = useNavigate()
+  const history = useNavigate();
   const initialState = {
     firstName: '',
     lastName: '',
     email: '',
     password: '',
     confirmPassword: ''
-  }
+  };
 
-  const [formData, setFormData] = useState(initialState)
-  
+  const [formData, setFormData] = useState(initialState);
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if(isSignUp) {
-      dispatch(signUp(formData, history))
+    if (isSignUp) {
+      dispatch(signUp(formData, history));
     } else {
-      dispatch(signIn(formData, history))
+      dispatch(signIn(formData, history));
     }
   };
 
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value})
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleShowPassword = () => {
@@ -70,23 +67,26 @@ const Auth = () => {
   });
 
   const googleSuccess = async (codeResponse) => {
-    const token = codeResponse.access_token
-    const result = await getUserInfo(token)
-    
+    const token = codeResponse.access_token;
+    const result = await getUserInfo(token);
+
     try {
-      dispatch({type: "AUTH", data: {result, token}})
-      history('/')
+      dispatch({ type: 'AUTH', data: { result, token } });
+      history('/');
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
-  const getUserInfo = async (access_token) =>{
-    const { data } = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${access_token}`, Headers = {
-      Authorization: `Bearer ${access_token}`
-    })
-    return data
-  }
+  const getUserInfo = async (access_token) => {
+    const { data } = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${access_token}`,
+      (Headers = {
+        Authorization: `Bearer ${access_token}`
+      })
+    );
+    return data;
+  };
 
   return (
     <Container component='main' maxWidth='xs'>
@@ -129,10 +129,11 @@ const Auth = () => {
             />
             {isSignUp && (
               <Input
-                type='password'
+                type={showPassword ? 'text' : 'password'}
                 name='confirmPassword'
                 label='Confirm Password'
                 handleChange={handleChange}
+                handleShowPassword={handleShowPassword}
               />
             )}
           </Grid>
@@ -153,7 +154,10 @@ const Auth = () => {
             onClick={() => login()}
             startIcon={<Icon />}
             variant='contained'
-          > Google Sign In </Button>
+          >
+            {' '}
+            Google Sign In{' '}
+          </Button>
 
           {/* <GoogleLogin
             clientId='454950466383-6ijsqpnd0i0el2fnrptkqfm7hba4dokb.apps.googleusercontent.com'
