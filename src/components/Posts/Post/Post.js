@@ -26,6 +26,8 @@ const Post = ({ post, setCurrentId }) => {
   const history = useNavigate();
   const [user, setUser] = useState(null);
 
+// THIS IS THE QUICK UX FEATUES BRANCH
+
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem('Profile')));
   }, [location]);
