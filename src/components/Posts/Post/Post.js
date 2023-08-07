@@ -20,7 +20,6 @@ import { deletePost, likePost } from '../../../actions/posts';
 import { useLocation } from 'react-router-dom';
 
 const Post = ({ post, setCurrentId }) => {
-  // console.log(post)
   const classes = useStyles();
   const dispatch = useDispatch();
   const location = useLocation();
