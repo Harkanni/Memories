@@ -4,7 +4,7 @@ import ChipInput from 'material-ui-chip-input'
 import { Container, Grow, Grid, Paper, AppBar, TextField, Button } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 
-import { getPost, getPostBySearch } from '../../actions/posts';
+import { getPostBySearch } from '../../actions/posts';
 import Posts from '../Posts/Posts';
 import Form from '../Form/Form';
 import Pagination from '../Pagination';
@@ -46,7 +46,7 @@ const Home = () => {
   }
   
   // useEffect(() => {
-  //   dispatch(getPost());
+  //   dispatch(getPosts());
   // }, [currentId, dispatch]);
 
   return (
@@ -89,9 +89,11 @@ const Home = () => {
               </Button>
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
-            <Paper elevation={6}>
-              <Pagination page={page}/>
-            </Paper>
+            {(!searchQuery && !tags.length) && (
+              <Paper elevation={6} className={classes.pagination}>
+                <Pagination page={page}/>
+              </Paper>
+            )}
           </Grid>
         </Grid>
       </Container>

@@ -5,11 +5,13 @@ import FileBase from 'react-file-base64';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { createPost, updatePost } from '../../actions/posts';
+import { useNavigate } from 'react-router-dom';
 
 const Form = ({ currentId, setCurrentId }) => {
-  const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId): null)
+  const post = useSelector((state) => currentId ? state.posts.posts.find((p) => p._id === currentId): null)
   const dispatch = useDispatch();
   const classes = useStyles();
+  const history = useNavigate();
   const [postData, setPostData] = useState({
     title: '',
     message: '',
@@ -32,14 +34,14 @@ const Form = ({ currentId, setCurrentId }) => {
       console.log(currentId)
       dispatch(updatePost(currentId, {...postData, name: user?.result.name}))
     } else {
-      dispatch(createPost({...postData, name: user?.result.name}));
+      dispatch(createPost({...postData, name: user?.result.name}, history));
     }
-    // clear()    
+    // clear()
   };
 
   if(!user?.result.name) {
     return (
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} elevation={6}>
         <Typography variant='h6' align='center'>
           Please sign in to create your own memories
         </Typography>
@@ -58,7 +60,7 @@ const Form = ({ currentId, setCurrentId }) => {
   };
 
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} elevation={6}>
       <form
         autoComplete='off'
         noValidate

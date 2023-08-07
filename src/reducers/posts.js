@@ -4,6 +4,7 @@ import {
   LIKE,
   FETCH_ALL,
   FETCH_BY_SEARCH,
+  FETCH_POST,
   CREATE,
   START_LOADING,
   END_LOADING
@@ -17,7 +18,10 @@ export default (state = { isLoading: true, posts: [] }, action) => {
     case END_LOADING:
       return { ...state, isLoading: false };
     case DELETE:
-      return {...state, posts: state.posts.filter((post) => post._id !== action.payload)};
+      return {
+        ...state,
+        posts: state.posts.filter((post) => post._id !== action.payload)
+      };
     case FETCH_ALL:
       return {
         ...state,
@@ -27,13 +31,18 @@ export default (state = { isLoading: true, posts: [] }, action) => {
       };
     case FETCH_BY_SEARCH:
       return { ...state, posts: action.payload };
+    case FETCH_POST:
+      return { ...state, post: action.payload };
     case CREATE:
-      return {...state, posts: [...state.posts, action.payload]};
+      return { ...state, posts: [...state.posts, action.payload] };
     case UPDATE:
     case LIKE:
-      return {...state, posts: state.posts.map((post) =>
-        post._id === action.payload._id ? action.payload : post
-      )};
+      return {
+        ...state,
+        posts: state.posts.map((post) =>
+          post._id === action.payload._id ? action.payload : post
+        )
+      };
     default:
       return state;
   }
