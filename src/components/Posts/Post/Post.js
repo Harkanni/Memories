@@ -27,27 +27,40 @@ const Post = ({ post, setCurrentId }) => {
   const [user, setUser] = useState(null);
 
 // THIS IS THE QUICK UX FEATUES BRANCH
+const [likes, setLikes] = useState(post?.likes);
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem('Profile')));
   }, [location]);
 
+  const hasLikedPost = post.likes.find((like) => like === (user?.googleId || user?.result?._id))
+  const userId = user?.result.googleId || user?.result?._id
+
+  const handleLike = async () => {
+    dispatch(likePost(post._id));
+
+    if(hasLikedPost) { 
+      setLikes(post.likes.filter((id) => id !== userId))
+    } else {
+      setLikes([...post.likes, userId]);
+    }
+}
+
   const Likes = () => {
-    if (post.likes.length > 0) {
-      return post.likes.find(
-        (like) => like === (user?.googleId || user?.result?._id)
+    if (likes.length > 0) {
+      return likes.find((like) => like === (userId)
       ) ? (
         <>
           <ThumbUpAltIcon fontSize='small' />
           &nbsp;
-          {post.likes.length > 3
-            ? `You and ${post.likes.length} others`
-            : `${post.likes.length} like${post.likes.length > 1 ? 's' : ''}`}
+          {likes.length > 3
+            ? `You and ${likes.length} others`
+            : `${likes.length} like${likes.length > 1 ? 's' : ''}`}
         </>
       ) : (
         <>
           <ThumbUpAltOutlined fontSize='small' />
-          &nbsp;{post.likes.length} {post.likes.length === 1 ? 'Like' : 'Likes'}
+          &nbsp;{likes.length} {likes.length === 1 ? 'Like' : 'Likes'}
         </>
       );
     }
@@ -111,24 +124,22 @@ const Post = ({ post, setCurrentId }) => {
           size='small'
           disabled={!user?.result}
           color='primary'
-          onClick={() => {
-            dispatch(likePost(post._id));
-          }}
+          onClick={handleLike}
         >
           {/* <ThumbUpAltIcon fontSize='small' />
-          &nbsp; Like &nbsp; {post.likes.length} */}
+          &nbsp; Like &nbsp; {likes.length} */}
           <Likes />
         </Button>
         {(user?.googleId === post?.creator ||
           user?.result?._id === post?.creator) && (
           <Button
             size='small'
-            color='primary'
+            color='#fff'
             onClick={() => {
               dispatch(deletePost(post._id));
             }}
           >
-            <DeleteIcon fontSize='small' />
+            <DeleteIcon fontSize='small' color='error' />
             Delete
           </Button>
         )}

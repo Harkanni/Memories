@@ -23,9 +23,9 @@ const PostDetails = ( ) => {
     dispatch(getPost(id));   
   }, [id])
 
-  useEffect(() => {
-    if(post) dispatch(getPostBySearch({search: 'none', tags: post.tags.join(',')}));
-  }, [post])
+  // useEffect(() => {
+  //   if(post) dispatch(getPostBySearch({search: 'none', tags: post.tags.join(',')}));
+  // }, [post])
 
   if(!post) {
     return null
@@ -39,7 +39,7 @@ const PostDetails = ( ) => {
     )
   }
 
-  const recommendedPosts = posts.filter(({_id}) => _id !== posts._id)
+  // const recommendedPosts = posts.filter(({_id}) => _id !== posts._id)
 
   const openPost = (_id) => history(`/posts/${_id}`)
 
@@ -65,7 +65,7 @@ const PostDetails = ( ) => {
       </div>
 
       {/* {RECOMMENDED } */}
-      {recommendedPosts.length && (
+      {/* {recommendedPosts.length && (
         <div className={classes.section}>
           <Typography gutterBottom variant='h5'>You might also like: </Typography>
           <Divider />
@@ -81,7 +81,7 @@ const PostDetails = ( ) => {
             ))}
           </div>
         </div>
-      )}
+      )} */}
     </Paper>
   )
 }

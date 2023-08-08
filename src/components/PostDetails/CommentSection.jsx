@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { TextField, Button, Typography } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 
@@ -6,21 +6,34 @@ import useStyles from './styles';
 import { commentPost } from '../../actions/posts';
 
 const CommentSection = ({ post }) => {
+  console.log(post)
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [comments, setComments] = useState(post?.comments);
+  const [COMMENTS, SETCOMMENTS] = useState(post?.comments);
+  console.log('This is post?.comments', post?.comments)
   const [comment, setComment] = useState('');
   const user = JSON.parse(localStorage.getItem('Profile'));
   const commentRef = useRef()
 
+  useEffect(() => {
+    SETCOMMENTS(post.comments);
+  }, [post])
+
   const handleClick = async () => {
     const finalComment = `${user.result.name}: ${comment}`;
-    const newComment = await dispatch(commentPost(finalComment, post._id));
+    const newComment = dispatch(commentPost(finalComment, post._id));
+    // newComment.then((comment) => console.log('This is Then: ',comment))
+    console.log('This is the newComment', newComment);
 
-    setComments(newComment);
-    setComment('')
+    newComment.then((comment) => {
+      console.log('This is the comment promise: ',comment);
+      SETCOMMENTS(comment.comments)
+      setComment('')
 
-    commentRef.current.scrollIntoView({ behaviour: 'smooth' })
+      commentRef.current.scrollIntoView({ behaviour: 'smooth' })
+    })
+
+    
   };
 
   console.log(post);
@@ -31,7 +44,7 @@ const CommentSection = ({ post }) => {
           <Typography gutterBottom variant='h6'>
             Comments
           </Typography>
-          {comments.map((comment, i) => (
+          {COMMENTS.map((comment, i) => (
             <Typography key={i} gutterBottom variant='subtitle1'>
               <strong> { comment.split(': ')[0] } </strong>
               { comment.split(':')[1] }

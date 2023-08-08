@@ -76,7 +76,7 @@ export const updatePost = (id, post) => async(dispatch) => {
 }
 
 export const deletePost = (id) => async(dispatch) => {
-  try {    dispatch({type: START_LOADING})
+  try {
     await api.deletePost(id)
 
     dispatch({type: DELETE, payload: id})
@@ -98,13 +98,14 @@ export const likePost = (id) => async (dispatch) => {
 export const commentPost = (value, id) => async (dispatch) => {
   try {
     const { data } = await api.comment(value, id)
+    console.log(data)
 
     dispatch({ type: COMMENT, payload: data})
 
 
-    return data.comment
+    return data
 
-    console.log(data)
+    // console.log(data)
   } catch (error) {
     console.log(error)
   }
