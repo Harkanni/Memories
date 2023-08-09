@@ -19,7 +19,8 @@ export default makeStyles((theme) => ({
   section: {
     borderRadius: '20px',
     margin: '10px',
-    flex: 1,
+    // flex: 1,
+    width: '70%'
   },
   imageSection: {
     marginLeft: '20px',
